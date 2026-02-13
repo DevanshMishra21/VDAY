@@ -3,210 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Valentine</title>
+    <title>A Special Surprise</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #fff0f5;
+            --bg: #fff5f7;
             --panel: #ffffff;
             --primary: #ff8da1;
-            --secondary: #ffccd5;
             --text: #a64d5d;
-            --timer-color: #ff4d6d;
         }
 
         body {
             background-color: var(--bg);
-            background-image: radial-gradient(#ffccd5 2px, transparent 2px);
-            background-size: 30px 30px;
-            color: var(--text);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
             font-family: 'Press Start 2P', cursive;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            text-align: center;
         }
 
-        .container {
+        /* The "Stage" where the characters stand */
+        #stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(#ffccd5 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Character Styling */
+        .character {
+            position: absolute;
+            height: 150px; /* Adjust based on your image size */
+            bottom: 30%;
+            image-rendering: pixelated;
+        }
+
+        #her {
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
+        #me {
+            right: -200px; /* Start off-screen to the right */
+            z-index: 10;
+            transition: right 3s ease-out; /* The walking animation */
+        }
+
+        /* Message Box - Hidden at start */
+        #messageBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
             background: var(--panel);
             border: 6px solid var(--text);
             padding: 30px 20px;
-            box-shadow: 10px 10px 0px var(--secondary);
+            box-shadow: 12px 12px 0px #ffe4e9;
             width: 90%;
             max-width: 400px;
-            z-index: 10;
-            position: relative;
+            z-index: 100;
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        h1 { font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        #messageBox.show { transform: translate(-50%, -50%) scale(1); }
 
+        /* UI Elements */
         #timer {
             background: #fffafa;
-            border: 3px dashed var(--secondary);
-            color: var(--timer-color);
-            font-size: 0.7rem;
-            padding: 15px 5px;
-            margin: 20px 0;
-            line-height: 2;
-        }
-
-        .main-heart {
-            font-size: 50px;
+            border: 3px dashed #ffe4e9;
             color: #ff4d6d;
-            margin-bottom: 15px;
-            display: inline-block;
-            animation: bounce 0.8s infinite alternate;
+            font-size: 0.7rem;
+            padding: 10px;
+            margin: 15px 0;
+            line-height: 1.8;
         }
 
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-
-        .btn-container {
-            margin-top: 25px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            min-height: 50px;
-        }
-
+        .btn-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
         .btn {
-            padding: 15px;
+            padding: 12px;
             font-family: 'Press Start 2P', cursive;
             font-size: 10px;
-            cursor: pointer;
             border: 4px solid var(--text);
-            transition: 0.1s;
+            cursor: pointer;
         }
+        #yesBtn { background: #ff8da1; color: white; box-shadow: 4px 4px 0px var(--text); }
+        #noBtn { background: #eee; color: #888; }
 
-        #yesBtn {
-            background: #ff8da1;
-            color: white;
-            box-shadow: 4px 4px 0px #d46a7c;
-        }
-
-        #noBtn {
-            background: #eee;
-            color: #888;
-            box-shadow: 4px 4px 0px #ccc;
-        }
-
-        .falling-element {
-            position: absolute;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        .pixel-confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            z-index: 100;
-        }
-
-        p { font-size: 9px; margin: 10px 0; }
+        /* Background Effects */
+        .sparkle { position: absolute; width: 4px; height: 4px; background: #fffb96; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="container" id="mainBox">
-        <div class="main-heart">♥</div>
-        <h1>I HAVE KNOWN YOU SINCE:</h1>
-        
-        <div id="timer">...LOADING MEMORIES...</div>
-        
-        <p>AND I ENJOY EVERY DAY WITH YOU.</p>
-        <p style="color: #ff4d6d; margin-top: 15px;">WILL YOU BE MY VALENTINE?</p>
-        
-        <div class="btn-container" id="controls">
-            <button class="btn" id="yesBtn">YES!</button>
-            <button class="btn" id="noBtn">NO</button>
+    <div id="stage">
+        <img src="her.png" id="her" class="character" alt="Her">
+        <img src="me.png" id="me" class="character" alt="Me">
+
+        <div id="messageBox">
+            <div style="font-size: 30px; color: #ff4d6d; margin-bottom: 10px;">♥</div>
+            <h1 style="font-size: 12px; color: var(--text);">I HAVE KNOWN YOU SINCE:</h1>
+            <div id="timer">0 DAYS</div>
+            <p style="font-size: 9px; color: var(--text);">AND I ENJOY EVERY DAY WITH YOU.</p>
+            <p style="color: #ff4d6d; font-size: 11px; margin-top: 15px;">WILL YOU BE MY VALENTINE?</p>
+            
+            <div class="btn-container">
+                <button class="btn" id="yesBtn">YES!</button>
+                <button class="btn" id="noBtn">NO</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const startDate = new Date("December 21, 2021 00:00:00").getTime();
+        // 1. Walking Animation
+        window.onload = () => {
+            const me = document.getElementById('me');
+            const messageBox = document.getElementById('messageBox');
 
+            // Start walking in after 1 second
+            setTimeout(() => {
+                // Adjust this 'right' value so you stop perfectly in front of her
+                // On mobile, 25-30% usually works well.
+                me.style.right = "35%"; 
+                
+                // Show the message box after the walk finishes (3 seconds later)
+                setTimeout(() => {
+                    messageBox.classList.add('show');
+                }, 3200);
+            }, 1000);
+        };
+
+        // 2. Timer Logic (Dec 21, 2021)
+        const startDate = new Date("December 21, 2021 00:00:00").getTime();
         function updateTimer() {
             const now = new Date().getTime();
             const diff = now - startDate;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById("timer").innerHTML = 
-                days + " DAYS<br>" + 
-                String(hours).padStart(2, '0') + "H " + 
-                String(minutes).padStart(2, '0') + "M " + 
-                String(seconds).padStart(2, '0') + "S";
+            const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById("timer").innerHTML = days + " DAYS<br>" + hrs + "H " + mins + "M " + secs + "S";
         }
         setInterval(updateTimer, 1000);
         updateTimer();
 
+        // 3. Button Interactions
         const noBtn = document.getElementById('noBtn');
-        const moveNo = () => {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        };
-        noBtn.addEventListener('mouseover', moveNo);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
+        const yesBtn = document.getElementById('yesBtn');
 
-        document.getElementById('yesBtn').addEventListener('click', () => {
-            document.querySelector('h1').innerHTML = "SUCCESS!";
-            document.getElementById('timer').innerHTML = "I LOVE YOU!<br>FOREVER & ALWAYS";
-            document.getElementById('controls').style.display = 'none';
-            document.querySelector('.main-heart').style.animation = "pulse 0.3s infinite alternate";
-            spawnConfetti();
+        noBtn.addEventListener('mouseover', () => {
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * 80 + 'vw';
+            noBtn.style.top = Math.random() * 80 + 'vh';
         });
 
-        function spawnConfetti() {
-            const colors = ['#ff8da1', '#ffccd5', '#ffffff', '#ff4d6d'];
-            for (let i = 0; i < 100; i++) {
-                const div = document.createElement('div');
-                div.className = 'pixel-confetti';
-                div.style.background = colors[Math.floor(Math.random() * colors.length)];
-                div.style.left = '50%';
-                div.style.top = '50%';
-                document.body.appendChild(div);
-                
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 500 + 100;
-                div.animate([
-                    { transform: 'translate(0,0)', opacity: 1 },
-                    { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`, opacity: 0 }
-                ], { duration: 2000, fill: 'forwards' });
-            }
-        }
+        yesBtn.addEventListener('click', () => {
+            messageBox.innerHTML = "<div style='font-size:40px;'>💖</div><br>PLAYER 2 JOINED!<br><br>I LOVE YOU!";
+        });
 
-        function createBgElements() {
-            const el = document.createElement('div');
-            el.className = 'falling-element';
-            el.innerHTML = Math.random() > 0.5 ? '♥' : '✿';
-            el.style.left = Math.random() * 100 + 'vw';
-            el.style.top = '-20px';
-            el.style.color = '#ffccd5';
-            document.body.appendChild(el);
-            
-            let pos = -20;
-            const speed = Math.random() * 2 + 1;
-            function fall() {
-                pos += speed;
-                el.style.top = pos + 'px';
-                if (pos < window.innerHeight) requestAnimationFrame(fall);
-                else el.remove();
-            }
-            fall();
-        }
-        setInterval(createBgElements, 400);
+        // 4. Background Sparkles
+        setInterval(() => {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = Math.random() * 100 + 'vw';
+            s.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 1000);
+        }, 300);
     </script>
 </body>
 </html>
