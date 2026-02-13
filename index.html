@@ -1,181 +1,266 @@
-<!DOCTYPE html>
+You said
+read: <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>A Special Surprise</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <style>
+
         :root {
+
             --bg: #fff5f7;
+
             --panel: #ffffff;
+
             --primary: #ff8da1;
+
             --text: #a64d5d;
+
         }
+
+
 
         body {
+
             background-color: var(--bg);
+
             margin: 0;
+
             padding: 0;
+
             overflow: hidden;
+
             font-family: 'Press Start 2P', cursive;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             height: 100vh;
+
         }
+
+
 
         /* The "Stage" where the characters stand */
+
         #stage {
+
             position: relative;
+
             width: 100vw;
+
             height: 100vh;
+
             background-image: radial-gradient(#ffccd5 1px, transparent 1px);
+
             background-size: 40px 40px;
+
         }
+
+
 
         /* Character Styling */
+
         .character {
+
             position: absolute;
+
             height: 150px; /* Adjust based on your image size */
+
             bottom: 30%;
+
             image-rendering: pixelated;
+
         }
+
+
 
         #her {
+
             left: 50%;
+
             transform: translateX(-50%);
+
             z-index: 5;
+
         }
+
+
 
         #me {
+
             right: -200px; /* Start off-screen to the right */
+
             z-index: 10;
+
             transition: right 3s ease-out; /* The walking animation */
+
         }
 
+
+
         /* Message Box - Hidden at start */
+
         #messageBox {
+
             position: absolute;
+
             top: 50%;
+
             left: 50%;
+
             transform: translate(-50%, -50%) scale(0);
+
             background: var(--panel);
+
             border: 6px solid var(--text);
+
             padding: 30px 20px;
+
             box-shadow: 12px 12px 0px #ffe4e9;
+
             width: 90%;
+
             max-width: 400px;
+
             z-index: 100;
+
             text-align: center;
+
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
         }
+
+
 
         #messageBox.show { transform: translate(-50%, -50%) scale(1); }
 
+
+
         /* UI Elements */
+
         #timer {
+
             background: #fffafa;
+
             border: 3px dashed #ffe4e9;
+
             color: #ff4d6d;
+
             font-size: 0.7rem;
+
             padding: 10px;
+
             margin: 15px 0;
+
             line-height: 1.8;
+
         }
+
+
 
         .btn-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+
         .btn {
+
             padding: 12px;
+
             font-family: 'Press Start 2P', cursive;
+
             font-size: 10px;
+
             border: 4px solid var(--text);
+
             cursor: pointer;
+
         }
+
         #yesBtn { background: #ff8da1; color: white; box-shadow: 4px 4px 0px var(--text); }
+
         #noBtn { background: #eee; color: #888; }
 
+
+
         /* Background Effects */
+
         .sparkle { position: absolute; width: 4px; height: 4px; background: #fffb96; animation: blink 1s infinite; }
+
         @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
     </style>
+
 </head>
+
 <body>
 
+
+
     <div id="stage">
-        <img src="IMG_2844.png" id="IMG_2844" class="character" alt="IMG_2844">
-        <img src="IMG_2840.png" id="IMG_2840" class="character" alt="IMG_2840">
+
+        <img src="her.png" id="her" class="character" alt="Her">
+
+        <img src="me.png" id="me" class="character" alt="Me">
+
+
 
         <div id="messageBox">
+
             <div style="font-size: 30px; color: #ff4d6d; margin-bottom: 10px;">♥</div>
+
             <h1 style="font-size: 12px; color: var(--text);">I HAVE KNOWN YOU SINCE:</h1>
+
             <div id="timer">0 DAYS</div>
+
             <p style="font-size: 9px; color: var(--text);">AND I ENJOY EVERY DAY WITH YOU.</p>
+
             <p style="color: #ff4d6d; font-size: 11px; margin-top: 15px;">WILL YOU BE MY VALENTINE?</p>
+
             
+
             <div class="btn-container">
+
                 <button class="btn" id="yesBtn">YES!</button>
+
                 <button class="btn" id="noBtn">NO</button>
+
             </div>
+
         </div>
+
     </div>
 
+
+
     <script>
+
         // 1. Walking Animation
+
         window.onload = () => {
+
             const me = document.getElementById('me');
+
             const messageBox = document.getElementById('messageBox');
 
+
+
             // Start walking in after 1 second
+
             setTimeout(() => {
+
                 // Adjust this 'right' value so you stop perfectly in front of her
+
                 // On mobile, 25-30% usually works well.
+
                 me.style.right = "35%"; 
-                
-                // Show the message box after the walk finishes (3 seconds later)
-                setTimeout(() => {
-                    messageBox.classList.add('show');
-                }, 3200);
-            }, 1000);
-        };
-
-        // 2. Timer Logic (Dec 21, 2021)
-        const startDate = new Date("December 21, 2021 00:00:00").getTime();
-        function updateTimer() {
-            const now = new Date().getTime();
-            const diff = now - startDate;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const secs = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById("timer").innerHTML = days + " DAYS<br>" + hrs + "H " + mins + "M " + secs + "S";
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-
-        // 3. Button Interactions
-        const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-
-        noBtn.addEventListener('mouseover', () => {
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = Math.random() * 80 + 'vw';
-            noBtn.style.top = Math.random() * 80 + 'vh';
-        });
-
-        yesBtn.addEventListener('click', () => {
-            messageBox.innerHTML = "<div style='font-size:40px;'>💖</div><br>PLAYER 2 JOINED!<br><br>I LOVE YOU!";
-        });
-
-        // 4. Background Sparkles
-        setInterval(() => {
-            const s = document.createElement('div');
-            s.className = 'sparkle';
-            s.style.left = Math.random() * 100 + 'vw';
-            s.style.top = Math.random() * 100 + 'vh';
-            document.body.appendChild(s);
-            setTimeout(() => s.remove(), 1000);
-        }, 300);
-    </script>
-</body>
-</html>
