@@ -43,13 +43,13 @@
             to { background-position: 400px 400px; }
         }
 
-        /* Characters - Made them bigger and closer */
+        /* Characters - Transparent and Big */
         .character-container {
             position: absolute;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: -20px; /* Pulls them slightly closer together */
+            gap: -30px; /* Overlap them slightly for a closer feel */
             cursor: pointer;
             z-index: 10;
             transition: opacity 0.5s ease;
@@ -57,7 +57,7 @@
 
         #meetingHeart {
             position: absolute;
-            font-size: 32px; /* Bigger heart */
+            font-size: 32px;
             color: var(--heart);
             top: -60px;
             opacity: 0;
@@ -70,29 +70,27 @@
         @keyframes heartFloat { 0%, 100% { transform: scale(1.2) translateY(0); } 50% { transform: scale(1.3) translateY(-10px); } }
 
         .crop-frame {
-            width: 180px; /* Increased from 145px */
-            height: 180px; /* Increased from 145px */
+            width: 220px; /* Much bigger! */
+            height: 220px;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 4px solid var(--text); /* Added a little border for style */
-            background: white;
+            background: transparent; /* Back to transparent! */
             transition: transform 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .character {
-            width: 100%; height: 100%;
-            object-fit: cover; 
-            object-position: center 15%; /* Keeps faces centered */
-            transform: scale(1.1); /* Adjusted zoom for the larger frame */
-            mix-blend-mode: multiply;
+            width: 100%; 
+            height: 100%;
+            object-fit: contain; /* Changed to contain so no part of you gets cut off */
+            mix-blend-mode: multiply; /* Keeps that cool blended look */
         }
 
         #herFrame { transform: translateX(-150vw); }
         #meFrame { transform: translateX(150vw); }
 
-        /* The Music Player Styling */
+        /* Music Player */
         .player-container {
             position: absolute;
             bottom: 30px;
@@ -163,7 +161,7 @@
 
         #instruction {
             position: absolute;
-            bottom: 20%; /* Lowered slightly for the bigger images */
+            bottom: 15%; 
             font-size: 10px;
             color: var(--text);
             animation: blink 1.5s infinite;
