@@ -25,7 +25,6 @@
             touch-action: none;
         }
 
-        /* ANIMATED HEART BACKGROUND */
         #stage {
             position: relative;
             width: 100vw;
@@ -44,6 +43,7 @@
             to { background-position: 400px 400px; }
         }
 
+        /* Characters */
         .character-container {
             position: absolute;
             display: flex;
@@ -64,19 +64,10 @@
             transform: scale(0);
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 20;
-            text-shadow: 2px 2px 0px white;
         }
 
-        #meetingHeart.show {
-            opacity: 1;
-            transform: scale(1.2);
-            animation: heartFloat 1.5s infinite ease-in-out;
-        }
-
-        @keyframes heartFloat {
-            0%, 100% { transform: scale(1.2) translateY(0); }
-            50% { transform: scale(1.3) translateY(-10px); }
-        }
+        #meetingHeart.show { opacity: 1; transform: scale(1.2); animation: heartFloat 1.5s infinite; }
+        @keyframes heartFloat { 0%, 100% { transform: scale(1.2) translateY(0); } 50% { transform: scale(1.3) translateY(-10px); } }
 
         .crop-frame {
             width: 145px; height: 145px;
@@ -96,6 +87,36 @@
         #herFrame { transform: translateX(-150vw); }
         #meFrame { transform: translateX(150vw); }
 
+        /* The Music Player Styling */
+        .player-container {
+            position: absolute;
+            bottom: 30px;
+            width: 80%;
+            max-width: 300px;
+            background: white;
+            padding: 10px;
+            border: 4px solid var(--text);
+            box-shadow: 4px 4px 0px var(--text);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .player-label {
+            font-size: 8px;
+            color: var(--text);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        audio {
+            width: 100%;
+            height: 30px;
+            filter: sepia(20%) hue-rotate(300deg) saturate(150%); /* Tints the player pinkish */
+        }
+
+        /* Message Box */
         #messageBox {
             position: absolute;
             display: none;
@@ -133,14 +154,11 @@
             color: white;
             box-shadow: 4px 4px 0px var(--text);
             cursor: pointer;
-            transition: transform 0.1s;
         }
-
-        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--text); }
 
         #instruction {
             position: absolute;
-            bottom: 20%;
+            bottom: 25%;
             font-size: 10px;
             color: var(--text);
             animation: blink 1.5s infinite;
@@ -152,11 +170,14 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
-
     <div id="stage">
+        <div class="player-container">
+            <div class="player-label">Now Playing 🎵</div>
+            <audio id="bgMusic" controls loop>
+                <source src="music.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
         <div id="characterGroup" class="character-container">
             <div id="meetingHeart">♥</div>
             <div id="herFrame" class="crop-frame">
@@ -202,8 +223,8 @@
         };
 
         group.onclick = () => {
-            // Start Music on Interaction
-            music.play().catch(e => console.log("Audio needs user gesture first"));
+            // Music starts automatically when characters are tapped
+            music.play();
             
             group.style.opacity = "0";
             instruction.style.display = "none";
@@ -227,8 +248,7 @@
         setInterval(updateTimer, 1000);
 
         document.getElementById('yesBtn').onclick = () => {
-            if (navigator.vibrate) navigator.vibrate(70);
-            alert("💖 Best Valentine's Day ever!");
+            alert("💖 Happy Valentine's Day!");
         };
     </script>
 </body>
