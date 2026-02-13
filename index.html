@@ -25,11 +25,13 @@
             touch-action: none;
         }
 
+        /* NEW HEART BACKGROUND */
         #stage {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background-image: radial-gradient(#ffccd5 1px, transparent 1px);
+            /* Using a repeatable SVG heart pattern */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 10c-2.5-4-8-4-8 0 0 3 8 7 8 7s8-4 8-7c0-4-5.5-4-8 0z' fill='%23ffccd5'/%3E%3C/svg%3E");
             background-size: 40px 40px;
             display: flex;
             justify-content: center;
@@ -43,13 +45,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: -10px; /* Kept them close as requested */
             cursor: pointer;
             z-index: 10;
             transition: opacity 0.5s ease;
         }
 
-        /* The "Crop Frame" that removes extra space */
+        /* Animated Heart that appears between you */
+        #meetingHeart {
+            position: absolute;
+            font-size: 24px;
+            color: var(--heart);
+            top: -40px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 20;
+            text-shadow: 2px 2px 0px white;
+        }
+
+        #meetingHeart.show {
+            opacity: 1;
+            transform: scale(1.2);
+            animation: float 1.5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: scale(1.2) translateY(0); }
+            50% { transform: scale(1.3) translateY(-10px); }
+        }
+
         .crop-frame {
             width: 145px; 
             height: 145px;
@@ -57,28 +82,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Animation timing for the walk-in */
             transition: transform 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .character {
             width: 100%;
             height: 100%;
-            /* 'cover' fills the square and chops off the extra edges */
             object-fit: cover; 
-            /* Focuses the crop on the upper-center (faces) */
             object-position: center 20%; 
-            /* Zooms in to remove even more background space */
             transform: scale(1.25); 
-            /* Blends white photo backgrounds into the pink page */
             mix-blend-mode: multiply; 
         }
 
-        /* Initial off-screen positions */
         #herFrame { transform: translateX(-150vw); }
         #meFrame { transform: translateX(150vw); }
 
-        /* Message Card Styling */
         #messageBox {
             position: absolute;
             display: none;
@@ -137,6 +155,7 @@
 
     <div id="stage">
         <div id="characterGroup" class="character-container">
+            <div id="meetingHeart">♥</div>
             <div id="herFrame" class="crop-frame">
                 <img src="her.png" class="character" alt="Her">
             </div>
@@ -161,24 +180,24 @@
         const herFrame = document.getElementById('herFrame');
         const meFrame = document.getElementById('meFrame');
         const group = document.getElementById('characterGroup');
+        const heart = document.getElementById('meetingHeart');
         const box = document.getElementById('messageBox');
         const instruction = document.getElementById('instruction');
         const timerDisplay = document.getElementById("timer");
 
-        // 1. Walk-in Animation
         window.onload = () => {
             setTimeout(() => {
                 herFrame.style.transform = "translateX(0)";
                 meFrame.style.transform = "translateX(0)";
                 
                 setTimeout(() => {
+                    heart.classList.add('show');
                     instruction.style.visibility = "visible";
                 }, 2800);
             }, 500);
             updateTimer();
         };
 
-        // 2. Interactive Reveal
         group.onclick = () => {
             group.style.opacity = "0";
             instruction.style.display = "none";
@@ -192,7 +211,6 @@
             }, 500);
         };
 
-        // 3. Timer Logic (Dec 21, 2021)
         const startDate = new Date("December 21, 2021 00:00:00").getTime();
         
         function updateTimer() {
@@ -206,7 +224,6 @@
         }
         setInterval(updateTimer, 1000);
 
-        // 4. Success Alert
         document.getElementById('yesBtn').onclick = () => {
             if (navigator.vibrate) navigator.vibrate(70);
             alert("💖 Best Valentine's Day ever!");
